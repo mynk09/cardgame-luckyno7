@@ -18,8 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CardGameScreen(viewModel: GameViewModel = viewModel()) {
-    val dealtCards by viewModel.dealtCards.collectAsState()
+    val players = viewModel.players
     val context = LocalContext.current
     val maroon = Color(0xFF800000)
 
@@ -56,34 +54,35 @@ fun CardGameScreen(viewModel: GameViewModel = viewModel()) {
                     .background(Color.White.copy(alpha = 0.2f))
                     .padding(8.dp)
             ) {
-                if (dealtCards.isEmpty()) {
+                if (players.isEmpty()) {
                     Text(
-                        text = "Press 'Deal Again' to start",
+                        text = "No players found. Try restarting the game.",
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                 } else {
-                    dealtCards.forEachIndexed { playerIndex, hand ->
+                    players.forEach { player ->
                         Column(
                             modifier = Modifier.padding(bottom = 16.dp)
                         ) {
                             Text(
-                                text = "Player ${playerIndex + 1}:",
+                                text = "${player.name}'s Hand:",
                                 style = MaterialTheme.typography.titleMedium.copy(color = Color.White),
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
 
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                hand.forEach { card ->
+                                player.hand.forEach { card ->
                                     val resId = remember(card) {
                                         context.getCardResId(card)
                                     }
 
                                     Image(
                                         painter = painterResource(id = resId),
-                                        contentDescription = "${card.value} of ${card.suit}",
+                                        contentDescription = "${card.value.display} of ${card.suit.symbol}",
                                         modifier = Modifier.size(72.dp)
                                     )
                                 }
@@ -92,7 +91,7 @@ fun CardGameScreen(viewModel: GameViewModel = viewModel()) {
                     }
 
                     Button(
-                        onClick = { viewModel.dealCards() },
+                        onClick = { viewModel.resetGame() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.White,
                             contentColor = maroon
@@ -101,7 +100,7 @@ fun CardGameScreen(viewModel: GameViewModel = viewModel()) {
                             .fillMaxWidth()
                             .padding(top = 8.dp)
                     ) {
-                        Text("Deal Again")
+                        Text("Restart Game")
                     }
                 }
             }
