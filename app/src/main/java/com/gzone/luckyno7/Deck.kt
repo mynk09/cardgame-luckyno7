@@ -9,9 +9,9 @@ class Deck {
         reset()
     }
 
+    /** Resets the deck to a full set of 52 cards and shuffles it */
     fun reset() {
         cards.clear()
-        // Create all 52 cards
         Suit.values().forEach { suit ->
             Value.values().forEach { value ->
                 cards.add(Card(suit, value))
@@ -20,10 +20,12 @@ class Deck {
         shuffle()
     }
 
+    /** Shuffles the deck using a time-based seed */
     fun shuffle() {
         cards.shuffle(Random(System.currentTimeMillis()))
     }
 
+    /** Deals cards to players in a round-robin fashion */
     fun dealToPlayers(playerCount: Int, cardsPerPlayer: Int): List<List<Card>> {
         if (playerCount * cardsPerPlayer > cards.size) {
             throw IllegalArgumentException("Not enough cards in deck")
@@ -31,7 +33,6 @@ class Deck {
 
         val hands = List(playerCount) { mutableListOf<Card>() }
 
-        // Deal cards in standard fashion (one to each player in turn)
         repeat(cardsPerPlayer) {
             for (hand in hands) {
                 hand.add(cards.removeAt(0))
@@ -41,5 +42,14 @@ class Deck {
         return hands
     }
 
+    /** Draws the top card from the deck */
+    fun drawCard(): Card? {
+        return if (cards.isNotEmpty()) cards.removeAt(0) else null
+    }
+
+    /** Returns the number of cards left in the deck */
     fun remainingCards(): Int = cards.size
+
+    /** Alias for remainingCards */
+    fun cardsLeft(): Int = remainingCards()
 }

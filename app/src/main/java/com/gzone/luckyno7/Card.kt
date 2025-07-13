@@ -35,4 +35,22 @@ data class Card(val suit: Suit, val value: Value) {
         }
         return "card_${valueName}_$suitName"
     }
+
+    fun getGameValue(): Int {
+        return when (value) {
+            Value.ACE -> 1
+            Value.TWO -> 2
+            Value.THREE -> 3
+            Value.FOUR -> 4
+            Value.FIVE -> 5
+            Value.SIX -> 6
+            Value.SEVEN -> 0 // Lucky No. 7 rule
+            Value.EIGHT -> 8
+            Value.NINE -> 9
+            Value.TEN -> 10
+            Value.JACK -> 11
+            Value.QUEEN -> 12
+            Value.KING -> 13
+        }
+    }
 }
