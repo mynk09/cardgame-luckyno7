@@ -93,4 +93,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun getDeckSize(): Int = deck.cardsLeft()
+    fun peekTopCard(): Card? {
+        return deck.peekTop()
+    }
 }

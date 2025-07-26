@@ -52,4 +52,5 @@ class Deck {
 
     /** Alias for remainingCards */
     fun cardsLeft(): Int = remainingCards()
+    fun peekTop(): Card? = cards.lastOrNull()
 }

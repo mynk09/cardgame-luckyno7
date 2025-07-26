@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -86,6 +87,41 @@ fun CardGameScreen(viewModel: GameViewModel = viewModel()) {
                                         modifier = Modifier.size(72.dp)
                                     )
                                 }
+                            }
+                        }
+                    }
+
+                    // Remaining Deck UI
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            // Card back image
+                            Image(
+                                painter = painterResource(id = R.drawable.card_back),
+                                contentDescription = "Deck",
+                                modifier = Modifier.size(72.dp)
+                            )
+
+                            // Show deck size
+                            Text(
+                                text = "x ${viewModel.getDeckSize()}",
+                                style = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
+                                modifier = Modifier.alignByBaseline()
+                            )
+
+                            // Top card face (debug)
+                            val topCard = viewModel.peekTopCard()
+                            if (topCard != null) {
+                                val topResId = remember(topCard) { context.getCardResId(topCard) }
+                                Image(
+                                    painter = painterResource(id = topResId),
+                                    contentDescription = "Top Card",
+                                    modifier = Modifier.size(72.dp)
+                                )
                             }
                         }
                     }
